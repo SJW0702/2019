@@ -1,46 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
-        div {
+        .a{
             width: 100px;
             height: 100px;
             background: green;
+            
+        }
+        .b{
+            width: 100px;
+            height: 100px;
+            background: indigo;
         }
     </style>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var oDiv = document.querySelector('div')
-            var x=oDiv.offsetLeft
-            var y=oDiv.offsetTop
-            oDiv.addEventListener('touchstart', function (ev) {
-                //获取点击的坐标点
-                var disx=ev.targetTouches[0].pageX-x;
-                var disy=ev.targetTouches[0].pageY-y;
-                function move(ev){
-                    x=ev.targetTouches[0].pageX-disx;
-                    y=ev.targetTouches[0].pageY-disy;
-                    oDiv.style.transform='translate('+x+'px,'+y+'px)'
-                }
-                function end(){
-                    document.removeEventListener('thouchmove',move,false);
-                    document.removeEventListener('touchend',end,false)
-                }
-                document.addEventListener('touchmove',move, false)
-                document.addEventListener('touchend',end, false)
-            }, false)
-        }, false)
-    </script>
 </head>
-
 <body>
-    <div>
-
-    </div>
+    <div class="a"></div>
+    <div class="b"></div>
 </body>
+<script>
+    function drag(obj){
+        var x=0
+        var y=0
+        obj.addEventListener('touchstart',function(ev){
+            console.log(ev)
+            //获取坐标
+            var disx=ev.targetTouches[0].pageX-x;
+            var disy=ev.targetTouches[0].pageY-y;
 
+            function move(ev){
+                //移动，新坐标
+                x=ev.targetTouches[0].pageX-disx;
+                y=ev.targetTouches[0].pageY-disy;
+                obj.style.transform='translate('+x+'px,'+y+'px)'
+            }
+
+            function end(){
+                document.removeEventListener('touchmove',move,false);
+                document.addEventListener('touchend',end,false);
+            }
+
+            document.addEventListener('touchmove',move,false);
+            document.addEventListener('touchend',end,false);
+            ev.preventDefault();
+        },false)
+    }
+    document.addEventListener('DOMContentLoaded',function(){
+        var odiv=document.querySelectorAll('div');
+        for(var i=0;i<odiv.length;i++){
+            drag(odiv[i])
+        } 
+    },false)
+
+</script>
 </html>
